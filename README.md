@@ -11,5 +11,12 @@ Once you have activated your Python virtual environment, install the requirement
 
 # Where data was found
 
-EUROCONTROL Data: https://ansperformance.eu/data/#img-ideco-srcimagesprcq-economicspng-width50-height50-alteconomics-economics
+EUROCONTROL data: https://ansperformance.eu/data/#img-ideco-srcimagesprcq-economicspng-width50-height50-alteconomics-economics
+
+## Airport traffic data
+Airport traffic data Description (2016-2025): https://ansperformance.eu/reference/dataset/airport-traffic/
+CSV files: https://ansperformance.eu/csv/#aptflt-csv
+
+## CO2 emmissions data
 Emissions data (2010-2025): https://ansperformance.eu/reference/dataset/emissions/
+CSV files: https://ansperformance.eu/csv/#co2-csv 
