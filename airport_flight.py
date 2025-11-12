@@ -5,7 +5,7 @@ eu_27 = ["Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic"
          "Lithuania", "Luxembourg", "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia",
          "Slovenia", "Spain", "Sweden"]
 
-def is_eu_country(flight_data: pd.DataFrame) -> pd.DataFrame:
+def is_eu_country(flight_data: pd.DataFrame, country_col: str) -> pd.DataFrame:
     """
     Check if the specific country in the "STATE_NAME" cloumn is part of the EU-27.
     
@@ -14,9 +14,15 @@ def is_eu_country(flight_data: pd.DataFrame) -> pd.DataFrame:
     :return: Description
     :rtype: DataFrame
     """
-
-    flight_data["IS_EU_COUNTRY"] = flight_data["STATE_NAME"].apply(lambda x: x in eu_27)
+    # Add a new column to indicate if the country is in the EU-27. 
+    # Then filter the DataFrame based on this column.
+    flight_data["IS_EU_COUNTRY"] = flight_data[country_col].apply(lambda x: x in eu_27)
     flight_data = flight_data.drop(flight_data[flight_data["IS_EU_COUNTRY"] == False].index)
+
+    # Delete the helper column
+    flight_data = flight_data.drop(columns=["IS_EU_COUNTRY"], axis=1)
+
+    # Return the filtered DataFrame
     return flight_data
 
 
@@ -29,6 +35,7 @@ if __name__ == "__main__":
         "FLT_ARR_1": [],
         "FLT_TOT_1": [],
     })
+
     for i in range(2016, 2025):
         airport_traffic = pd.read_csv(f"Data/airport-traffic-data/airport_traffic_{i}.csv")
         df = pd.DataFrame(airport_traffic)
@@ -37,5 +44,4 @@ if __name__ == "__main__":
         print(result_df.head(5))
     
     # create one big dataframe with all the years data.
-    tot_result_df = tot_result_df.drop(columns=["IS_EU_COUNTRY"], axis=1)
     tot_result_df.to_csv(f"Data/airport-traffic-data/cleaned-data/eu_airport_traffic_2016_2024.csv", index=False)
