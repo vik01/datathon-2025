@@ -93,7 +93,7 @@ def clean_emissions_data(start_year: int, end_year: int):
     tot_result_df['YEAR'] = tot_result_df['YEAR'].astype(int)
     tot_result_df['MONTH'] = tot_result_df['MONTH'].astype(int)
     tot_result_df["COUNTRY_TRAFFIC"] = tot_result_df["COUNTRY_TRAFFIC"].astype(int)
-    tot_result_df.to_csv(f"Data/state_co2_data/cleaned_data/eu_co2_emissions_{start_year}_{end_year}.csv", index=False)
+    tot_result_df.to_csv(f"Data/state_co2_data/cleaned_data/eu_co2_emmissions_{start_year}_{end_year}.csv", index=False)
 
 if __name__ == "__main__":
 
