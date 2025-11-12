@@ -36,12 +36,12 @@ if __name__ == "__main__":
         "FLT_TOT_1": [],
     })
 
-    for i in range(2016, 2025):
+    for i in range(2016, 2026):
         airport_traffic = pd.read_csv(f"Data/airport-traffic-data/airport_traffic_{i}.csv")
         df = pd.DataFrame(airport_traffic)
-        result_df = is_eu_country(df)
+        result_df = is_eu_country(df, "STATE_NAME")
         tot_result_df = pd.concat([tot_result_df, result_df], ignore_index=True)
         print(result_df.head(5))
     
     # create one big dataframe with all the years data.
-    tot_result_df.to_csv(f"Data/airport-traffic-data/cleaned-data/eu_airport_traffic_2016_2024.csv", index=False)
+    tot_result_df.to_csv(f"Data/airport-traffic-data/cleaned-data/eu_airport_traffic_2016_2025.csv", index=False)
