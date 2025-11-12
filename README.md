@@ -7,3 +7,8 @@ Clone the repository on your local machine (https://docs.github.com/en/repositor
 
 Create and activate a Python virtual environmment (https://www.w3schools.com/python/python_virtualenv.asp)
 Once you have activated your Python virtual environment, install the requirements, run: pip install -r requirements.txt
+
+
+# Where data was found
+
+Emissions data (2010-2025): https://ansperformance.eu/reference/dataset/emissions/
