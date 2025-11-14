@@ -89,9 +89,72 @@ def calculate_population_growth(data: pd.DataFrame) -> pd.DataFrame:
     return result_df
 
 
+def data_change(input_file: str, output_file: str) -> pd.DataFrame:
+    """
+    Transform wide-format population data into long-format with columns:
+    Country, Year, Population, Change_from_Previous.
+
+    :param input_file: Path to the input CSV file (eu_population_growth_2012_2023.csv)
+    :type input_file: str
+    :param output_file: Path to save the output CSV file (eu_population_2012_2023.csv)
+    :type output_file: str
+    :return: Transformed DataFrame in long format
+    :rtype: pd.DataFrame
+    """
+    # Read the input file
+    data = pd.read_csv(input_file)
+
+    # Define years from 2012 to 2023
+    years = list(range(2012, 2024))
+
+    # Initialize lists to store the transformed data
+    countries_list = []
+    years_list = []
+    population_list = []
+    change_list = []
+
+    # Iterate through each country
+    for idx, row in data.iterrows():
+        country = row['Countries']
+
+        # For each year
+        for i, year in enumerate(years):
+            countries_list.append(country)
+            years_list.append(year)
+            population_list.append(row[str(year)])
+
+            # For 2012, set change to 0, otherwise use the pop_change column
+            if year == 2012:
+                change_list.append(0)
+            else:
+                # Find the corresponding pop_change column
+                prev_year = years[i-1]
+                change_col = f'pop_change_{prev_year}-{year}'
+                change_list.append(row[change_col])
+
+    # Create the new DataFrame
+    result_df = pd.DataFrame({
+        'Country': countries_list,
+        'Year': years_list,
+        'Population': population_list,
+        'Change_from_Previous': change_list
+    })
+
+    # Save to CSV
+    result_df.to_csv(output_file, index=False)
+
+    return result_df
+
+
 if __name__ == "__main__":
     data_path = "Data/population-data/xls0009913_i.csv"
     population_df = load_population_data(data_path)
     cleaned_pop = check_eu_countries(clean_single_col_data(population_df, separator=";", col_to_sep=0), country_col="Countries")
     new_data = calculate_population_growth(cleaned_pop)
     new_data.to_csv("Data/population-data/eu_population_growth_2012_2023.csv", index=False)
+
+    # Transform to long format
+    data_change(
+        input_file="Data/population-data/eu_population_growth_2012_2023.csv",
+        output_file="Data/population-data/eu_population_2012_2023.csv"
+    )
