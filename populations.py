@@ -130,7 +130,7 @@ def data_change(input_file: str, output_file: str) -> pd.DataFrame:
                 # Find the corresponding pop_change column
                 prev_year = years[i-1]
                 change_col = f'pop_change_{prev_year}-{year}'
-                change_list.append(row[change_col])
+                change_list.append(round(row[change_col], 6))
 
     # Create the new DataFrame
     result_df = pd.DataFrame({
