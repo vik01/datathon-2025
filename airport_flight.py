@@ -63,6 +63,23 @@ def get_airport_traffic(start_year: int, end_year: int):
     tot_result_df.to_csv(f"Data/airport-traffic-data/cleaned-data/eu_airport_traffic_{start_year}_{end_year}.csv", index=False)
 
 
+def calculate_total_fuel_consumption(emmission_dataframe : pd.DataFrame) -> pd.DataFrame:
+    """
+    Calculate the total fuel consumption based on CO2 emissions.
+
+    :param emmission_dataframe: DataFrame containing CO2 emissions data
+    :type emmission_dataframe: pd.DataFrame
+    :return: DataFrame with an additional column for total fuel consumption
+    :rtype: pd.DataFrame
+    """
+    # Assuming a conversion factor from CO2 emissions to fuel consumption
+    # This number is based on stoichiometric combustion chemistrt 
+    # and comes from established IPCC/ICAO references (e.g., IPCC 2006 Guidelines for National Greenhouse Gas Inventories).
+    CO2_TO_FUEL_CONVERSION_FACTOR = 3.16  # Example factor, actual value may vary
+
+    emmission_dataframe['FUEL_CONSUMPTION_TONNES'] = emmission_dataframe['CO2_QTY_TONNES'] / CO2_TO_FUEL_CONVERSION_FACTOR
+    return emmission_dataframe
+
 def clean_emissions_data(start_year: int, end_year: int):
     """
     Work on the entire CO2 emissions data from 2016 to 2021 and filter for EU-27 countries only.
@@ -92,6 +109,9 @@ def clean_emissions_data(start_year: int, end_year: int):
         result_df = is_eu_country(co2_data, "STATE_NAME").dropna()
         tot_result_df = pd.concat([tot_result_df, result_df], ignore_index=True)
     
+    # Calculate total fuel consumption
+    tot_result_df = calculate_total_fuel_consumption(tot_result_df).round({'FUEL_CONSUMPTION_TONNES': 2})
+    
     # create one big dataframe with all the years data.
     tot_result_df = tot_result_df.round({'CO2_QTY_TONNES': 2})
     tot_result_df['YEAR'] = tot_result_df['YEAR'].astype(int)
@@ -104,6 +124,6 @@ if __name__ == "__main__":
     # test = pd.read_csv("Data/state_co2_data/co2_emmissions_by_state_2010.csv").drop(columns=['STATE_CODE', 'NOTE'], axis=1)
     # new_data = test.groupby(['YEAR', 'MONTH', 'STATE_NAME'], as_index=False).sum()
 
-    get_airport_traffic(2016, 2025)
-    # clean_emissions_data(2010, 2025)
+    # get_airport_traffic(2016, 2025)
+    clean_emissions_data(2010, 2025)
     
